@@ -1,0 +1,7 @@
+{
+  "BuildFlag": "!GO_TEST",
+  "FileList": [
+    "file_modify.go",
+    "main.go"
+  ]
+}
