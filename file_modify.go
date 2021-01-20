@@ -87,7 +87,3 @@ func DelBuildFlagFromFile(file string, flag string) error {
 	err = ioutil.WriteFile(file, []byte(outputCode), 0644)
 	return err
 }
-
-func findBuildFlag(flag string) {
-
-}

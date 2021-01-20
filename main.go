@@ -41,18 +41,32 @@ func work() error {
 	config.Load(path.Join(".", defaultConfigFile))
 
 	// 参数检查
-	if len(os.Args) > 3 || len(os.Args) == 1 {
+	if len(os.Args) == 1 {
 		help(os.Args[0])
-	} else if os.Args[1] == "add" {
-		config.AddIgnore(os.Args[2])
+	} else if os.Args[1] == "add" && len(os.Args) > 2 {
+		for _, file := range os.Args[2:] {
+			if !strings.HasSuffix(file, ".go") {
+				fmt.Fprintf(os.Stderr, "skip '%s' not a go file\n", file)
+				continue
+			}
+			fmt.Fprintf(os.Stderr, "add '%s'\n", file)
+			config.AddIgnore(file)
+		}
 		return config.Write(defaultConfigFile)
-	} else if os.Args[1] == "del" {
-		config.DelIgnore(os.Args[2])
+	} else if os.Args[1] == "del" && len(os.Args) > 2 {
+		for _, file := range os.Args[2:] {
+			if !strings.HasSuffix(file, ".go") {
+				fmt.Fprintf(os.Stderr, "skip '%s' not a go file\n", file)
+				continue
+			}
+			fmt.Fprintf(os.Stderr, "del '%s'\n", file)
+			config.DelIgnore(file)
+		}
 		return config.Write(defaultConfigFile)
-	} else if os.Args[1] == "set-flag" {
+	} else if os.Args[1] == "set-flag" && len(os.Args) == 3 {
 		config.BuildFlag = os.Args[2]
 		return config.Write(defaultConfigFile)
-	} else if os.Args[1] == "submit" {
+	} else if os.Args[1] == "submit" && len(os.Args) == 2 {
 		// 遍历源码
 		return scanDir(".", createFileHandler(config))
 	} else {
